@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pay ₹10 Instantly!</title>
+<style>
+  body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#ff416c,#ff4b2b);color:white;display:flex;align-items:center;justify-content:center;height:100vh;overflow:hidden}
+  .card{background:rgba(0,0,0,0.5);padding:30px;border-radius:20px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.3);max-width:400px;width:90%;}
+  h1{margin:0 0 12px;font-size:28px;}
+  p{margin:6px 0;font-size:16px;}
+  .btn{margin-top:20px;padding:14px 24px;border-radius:12px;background:#fff;color:#ff4b2b;font-weight:bold;font-size:18px;text-decoration:none;display:inline-block;transition:all 0.3s ease;}
+  .btn:hover{transform:scale(1.05);}
+  #qr{margin-top:20px;display:none;}
+  code{background:#fff;color:#ff4b2b;padding:4px 8px;border-radius:6px;display:inline-block;margin-top:10px;word-break:break-word;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>💰 Pay ₹10 Instantly!</h1>
+    <p id="sub">हम आपके डिवाइस पर UPI app खोलने की कोशिश कर रहे हैं…</p>
+    <a id="payBtn" class="btn" href="#">Pay Now ₹10</a>
+
+    <div id="qr">
+      <p style="margin-top:10px;">या QR को scan करें:</p>
+      <img id="qrImg" alt="UPI QR" />
+    </div>
+    <div><code id="plainUri"></code></div>
+  </div>
+
+<script>
+const PA = "6396664913@sbi"; // Updated UPI ID
+const PN = "Kuldeep Gangwar";
+const AM = "10";
+const TN = "Payment for 10";
+const CU = "INR";
+
+const upiUri = `upi://pay?pa=${encodeURIComponent(PA)}&pn=${encodeURIComponent(PN)}&am=${encodeURIComponent(AM)}&tn=${encodeURIComponent(TN)}&cu=${encodeURIComponent(CU)}`;
+document.getElementById('plainUri').textContent = upiUri;
+document.getElementById('payBtn').href = upiUri;
+
+// QR generation using Google Chart API
+document.getElementById('qrImg').src = 'https://chart.googleapis.com/chart?cht=qr&chs=280x280&chl=' + encodeURIComponent(upiUri);
+
+// Auto attempt to open UPI app
+setTimeout(()=>{
+  try{ window.location = upiUri; }catch(e){}
+},300);
+
+// Desktop users see QR
+if(!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
+  document.getElementById('qr').style.display='block';
+  document.getElementById('sub').textContent="Desktop detected — QR scan करें या लिंक copy करें।";
+}
+</script>
+</body>
+</html>
